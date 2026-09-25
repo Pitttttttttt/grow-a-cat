@@ -27,7 +27,7 @@ img {
     transform: translate(-50%, -50%);
 }
 
-#pet-menu.open{
+#pet-menu.open {
     display: flex;
 }
 
@@ -78,19 +78,23 @@ img {
     display: flex;
 }
 
-#cat-name {
+#cat-box {
+    position: absolute;
+    transition: all linear 1s;
+}
 
+#cat-name {
     text-align: center;
     font-size: clamp(16px, 2vw, 24px);
 
-    position: absolute;
     margin: 0;
-
-    transform: translate(-50%, -100%);
 
     pointer-events: none;
 }
 
+#cat-name:has(+ #cat:not(:hover)) {
+    display: none;
+}
 
 #cat-stats input[type="text"] {
     width: 70%;
@@ -112,9 +116,6 @@ img {
     border-radius: 8px;
 }
 
-
-
-
 #cat-stats > p {
     margin: 4px 0 15px 0;
 
@@ -122,8 +123,6 @@ img {
 
     color: #6b5848;
 }
-
-
 
 #stats-content {
     width: 100%;
@@ -135,9 +134,6 @@ img {
     gap: 40px;
 }
 
-
-
-
 #cat-stats-img {
     width: 120px;
     height: 120px;
@@ -147,17 +143,12 @@ img {
     image-rendering: pixelated;
 }
 
-
-
-
 #stats-bars {
     display: flex;
     flex-direction: column;
 
     gap: 18px;
 }
-
-
 
 .bar-container {
     width: 160px;
@@ -171,9 +162,7 @@ img {
     image-rendering: pixelated;
 }
 
-
 @media (max-width: 500px) {
-
     #cat-stats {
         width: 90vw;
         min-height: 240px;
@@ -217,7 +206,9 @@ img {
     box-sizing: border-box;
     cursor: pointer;
 
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
 
     touch-action: none;
 }
@@ -260,7 +251,6 @@ img {
     font-weight: bold;
     font-size: clamp(13px, 1.8vw, 18px);
 }
-
 
 #game-container {
     height: 80vh;
@@ -353,14 +343,13 @@ h1 {
 }
 
 #cat {
-    position: absolute;
-    width: 15%;
-    height: auto;
+    width: 5vw;
+    aspect-ratio: 1/1;
+
     image-rendering: pixelated;
 }
 
 @media (max-width: 500px) {
-
     #actions {
         width: 80%;
         gap: 8px;
@@ -405,7 +394,6 @@ h1 {
     display: flex;
 }
 
-
 #cat-pet-img {
     width: 40%;
     max-width: 180px;
@@ -414,7 +402,6 @@ h1 {
     image-rendering: pixelated;
 }
 
-
 #pet-actions {
     width: 40%;
 
@@ -422,7 +409,6 @@ h1 {
     flex-direction: column;
     gap: 12px;
 }
-
 
 .pet-action-item {
     width: 100%;
@@ -450,9 +436,8 @@ h1 {
         box-shadow 0.15s ease,
         background-color 0.15s ease;
 
-        touch-action: none;
+    touch-action: none;
 }
-
 
 .pet-action-item img {
     width: 50px;
@@ -490,7 +475,6 @@ h1 {
 }
 
 @media (max-width: 500px) {
-
     #pet-menu {
         width: 90vw;
         min-height: 250px;
