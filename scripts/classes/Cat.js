@@ -2,8 +2,8 @@ class Cat {
     constructor() {
         // X and Y are a percentage relative to the width and height of catRect
         // 50,50 means the top left corner of catBox is in the center of catRect.
-        this.x = 50;
-        this.y = 50;
+        this.x = 45;
+        this.y = 45;
         this.hunger = 0;
         this.happiness = 100;
         this.energy = 100;
@@ -50,6 +50,7 @@ class Cat {
         catBox.style.left = `min(${this.y}%, calc(100% - ${catBox.offsetHeight}px))`;
         catNameHover.textContent = this._name;
         catAge.textContent = `Age: ${this.age}`;
+        nameOfCat.value = this._name;
 
         const updBar = (id, val) => {
             const element = document.getElementById(id);

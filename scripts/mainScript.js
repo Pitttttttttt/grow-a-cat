@@ -10,7 +10,6 @@ const petMenu = document.getElementById("pet-menu");
 const catNameHover = document.getElementById("cat-name");
 const nameOfCat = document.getElementById("name-of-cat");
 const catAge = document.getElementById("cat-age");
-
 const catRect = catElement.getBoundingClientRect();
 
 let cat = loadCat();
@@ -69,7 +68,7 @@ setInterval(() => {
     localStorage.setItem("lastSavedTime", lastSavedTime);
 }, minsToMillisecs(1));
 
-document.addEventListener("close", () => {
+document.addEventListener("visibilitychange", () => {
     const lastSavedTime = Date.now();
     localStorage.setItem("lastSavedTime", lastSavedTime);
     saveCatStats(cat);
@@ -84,5 +83,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 nameOfCat.addEventListener("change", async (e) => (cat.name = e.target.value));
 nameOfCat.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") catName.blur();
+    if (e.key === "Enter") nameOfCat.blur();
 });
