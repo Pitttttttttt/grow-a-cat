@@ -157,7 +157,7 @@ img {
     background-repeat: no-repeat;
     background-size: 160px 150px;
 
-    background-image: url("/assets/UI/bars.png");
+    background-image: url("./assets/UI/bars.png");
     background-position: 0 0;
 
     image-rendering: pixelated;
