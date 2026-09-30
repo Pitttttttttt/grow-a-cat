@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -23,8 +23,10 @@
         <div id="game-container">
             <div id="cat-container">
                 <button id="go-to-sleep">Go to sleep</button>
-                <img id="cat" src="./assets/cat/catIdle.png" alt="Cat" />
-                <p id="cat-name"></p>
+                <div id="cat-box">
+                    <p id="cat-name"></p>
+                    <img id="cat" src="./assets/cat/catIdle.png" alt="Cat" />
+                </div>
             </div>
             <div id="actions">
                 <button class="action-button" id="feed-button">Feed</button>
@@ -33,7 +35,27 @@
             </div>
             <div id="food-menu"></div>
             <div id="pet-menu"></div>
-            <div id="cat-stats"></div>
+            <div id="cat-stats">
+                <input id="name-of-cat" type="text" name="Cat name" />
+                <p id="cat-age"></p>
+                <div id="stats-content">
+                    <img
+                        alt="cat"
+                        id="cat-stats-img"
+                        src="/assets/cat/catIdle.png"
+                    />
+                    <div id="stats-bars">
+                        <div id="cat-happiness" class="bar-container">
+                            happiness
+                        </div>
+                        <div id="cat-hunger" class="bar-container">fulness</div>
+                        <div id="cat-energy" class="bar-container">energy</div>
+                        <div id="cat-cleanliness" class="bar-container">
+                            cleanliness
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

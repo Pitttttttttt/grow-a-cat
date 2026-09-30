@@ -1,107 +1,75 @@
 class Cat {
     constructor() {
-        // Velocità espressa in pixel al secondo
-        this.speed = 0.3 * gameArea.clientWidth;
-        this.x = Math.floor(gameArea.clientWidth / 2) - Math.floor(catRect.width / 2);
-        this.y = Math.floor(gameArea.clientHeight / 2) - Math.floor(catRect.height / 2);
+        // X and Y are a percentage relative to the width and height of catRect
+        // 50,50 means the top left corner of catBox is in the center of catRect.
+        this.x = 50;
+        this.y = 50;
         this.hunger = 0;
         this.happiness = 100;
         this.energy = 100;
         this.cleanliness = 100;
         this.age = 0;
         this.lastBirthday = Date.now();
-        this.name = "Unknown Cat";
+        this._name = "Unknown Cat";
         this.isAsleep = false;
+        this._timeToMove = 1;
+
+        this.updateGraphics();
+
+        let _isRunningMovingLoop = false;
+        setInterval(async () => {
+            if (this.isAsleep || _isRunningMovingLoop) return;
+            _isRunningMovingLoop = true;
+
+            const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+            const waitTime = Math.floor(Math.random() * 5000);
+
+            const [nextX, nextY] = [Math.random() * 100, Math.random() * 100];
+            // 33% / 1 rapporto distanza/tempo
+            // 33 : 1 = DIST : TEMPO
+            // (1*DIST) / 33 = TEMPO
+            const [percentageX, percentageY] = [nextX - this.x, nextY - this.y];
+            const distanceInPercentage = Math.sqrt(
+                Math.pow(percentageX, 2) + Math.pow(percentageY, 2),
+            );
+            this._timeToMove = distanceInPercentage / 33;
+
+            await delay(waitTime + this._timeToMove);
+            _isRunningMovingLoop = false;
+
+            this.x = nextX;
+            this.y = nextY;
+
+            this.updateGraphics();
+        }, 1100); // Questa attesa deve essere più dell'animazione in CSS.
     }
 
-    async moveCat() {
+    updateGraphics() {
+        catBox.style.transition = `all ${this._timeToMove}s linear`;
+        catBox.style.top = `min(${this.x}%, calc(100% - ${catBox.offsetWidth}px))`;
+        catBox.style.left = `min(${this.y}%, calc(100% - ${catBox.offsetHeight}px))`;
+        catNameHover.textContent = this._name;
+        catAge.textContent = `Age: ${this.age}`;
 
-        let oldCoordinates = {
-            x: this.x,
-            y: this.y
+        const updBar = (id, val) => {
+            const element = document.getElementById(id);
+            element.classList.remove("l1", "l2", "l3", "l4", "l5");
+            element.classList.add(
+                val === 0
+                    ? "l5"
+                    : val <= 25
+                      ? "l4"
+                      : val <= 50
+                        ? "l3"
+                        : val <= 75
+                          ? "l2"
+                          : "l1",
+            );
         };
-
-        let destination = {
-            x: Math.floor(
-                Math.random() *
-                (gameArea.clientWidth - catElement.clientWidth)
-            ),
-            y: Math.floor(
-                Math.random() *
-                (gameArea.clientHeight - catElement.clientHeight)
-            )
-        };
-
-        return new Promise((resolve) => {
-
-            let lastTime = performance.now();
-
-            const move = (timestamp) => {
-
-                // Tempo trascorso dall'ultimo frame, in secondi
-                let deltaTime = (timestamp - lastTime) / 1000;
-                lastTime = timestamp;
-
-                let dx = destination.x - oldCoordinates.x;
-                let dy = destination.y - oldCoordinates.y;
-
-                let dir = Math.sqrt(dx * dx + dy * dy);
-
-                if (dir <= this.speed * deltaTime) {
-
-                    this.x = destination.x;
-                    this.y = destination.y;
-
-                    catElement.style.left = this.x + 'px';
-                    catElement.style.top = this.y + 'px';
-
-                    catNameHover.style.left = this.x + catElement.clientWidth / 2 + 'px';
-                    catNameHover.style.top = this.y + 'px';
-
-                    resolve();
-                    return;
-                }
-
-                let directionX = dx / dir;
-                let directionY = dy / dir;
-
-                // La distanza percorsa dipende dal tempo trascorso.
-                let movement = this.speed * deltaTime;
-
-                this.x = oldCoordinates.x + directionX * movement;
-                this.y = oldCoordinates.y + directionY * movement;
-
-                catElement.style.left = this.x + 'px';
-                catElement.style.top = this.y + 'px';
-
-                catNameHover.style.left = this.x + catElement.clientWidth / 2 + 'px';
-                catNameHover.style.top = this.y + 'px';
-
-                oldCoordinates.x = this.x;
-                oldCoordinates.y = this.y;
-
-                requestAnimationFrame(move);
-            }
-
-            requestAnimationFrame(move);
-        });
-    }
-
-    idleCat() {
-
-        let waitTime = Math.floor(Math.random() * 5000);
-
-        if (!this.isAsleep) {
-            this.moveCat().then(() => {
-
-                setTimeout(() => {
-
-                    this.idleCat();
-
-                }, waitTime);
-
-            });
-        }
+        updBar("cat-happiness", this.happiness);
+        updBar("cat-hunger", 100 - this.hunger);
+        updBar("cat-energy", this.energy);
+        updBar("cat-cleanliness", this.cleanliness);
     }
 
     feed(food) {
@@ -130,7 +98,6 @@ class Cat {
     tires() {
         this.energy -= 5;
         if (this.energy < 0) this.energy = 0;
-
     }
 
     rests() {
@@ -139,10 +106,8 @@ class Cat {
     }
 
     getsSad() {
-
         this.happiness -= 10;
         if (this.happiness < 0) this.happiness = 0;
-
     }
 
     getsHungry() {
@@ -155,24 +120,27 @@ class Cat {
         if (this.cleanliness < 0) this.cleanliness = 0;
     }
 
-
     updateAge() {
         let now = Date.now();
         let daysPassed = (now - this.lastBirthday) / (24 * 60 * 60 * 1000);
 
         if (daysPassed >= 15) {
-
             let ageInc = Math.floor(daysPassed / 15);
 
             this.age += ageInc;
             this.lastBirthday += ageInc * 15 * 24 * 60 * 60 * 1000;
-
         }
 
         saveCatStats(this);
-        updateCatStats(this);
-
-
     }
 
+    set name(v) {
+        this._name = v;
+        this.updateGraphics();
+        saveCatStats(this);
+    }
+
+    get name() {
+        return this._name;
+    }
 }
